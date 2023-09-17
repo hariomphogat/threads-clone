@@ -4,11 +4,10 @@ let isConnected = false; //variable to check if mongoose is connected
 
 export const connectToDB = async () => {
     mongoose.set('strictQuery', true);
-    if(!process.env.MONGODB_URl) return console.log('MONGODB_URL not found');
+    if(!process.env.MONGODB_URL) return console.log('MONGODB_URL not found');
     if(isConnected) return console.log('ALready connected to MongoDB');
 
   try {
-    const databaseURL= process.env.MONGODB_URL;
     await mongoose.connect(process.env.MONGODB_URL);
     isConnected = true;
     console.log("connected to mongoDB");
