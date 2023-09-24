@@ -6,7 +6,7 @@ import { currentUser } from "@clerk/nextjs";
 export default async function Home() {
  const user = await currentUser();
   const result = await fetchPosts(1,30);
-  // console.log(result.posts[0]);
+
   
   
 
@@ -19,7 +19,7 @@ export default async function Home() {
         ) : (
           <>
           {result.posts.map((post) => ( 
-            
+          
             
           <ThreadCard 
             key={post._id}

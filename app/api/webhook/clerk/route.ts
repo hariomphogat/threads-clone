@@ -66,29 +66,35 @@ export const POST = async (request: Request) => {
     // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/CreateOrganization
     // Show what evnt?.data sends from above resource
     console.log(
-      "organisation created ref:route.ts/line68,data collected from clerk ",
+      "organisation created",
       evnt?.data
     );
     
-    // const { id, name, slug, logo_url, image_url, created_by } =
-    //   evnt?.data ?? {};
+    const { id, name, slug, logo_url, image_url, created_by } =
+      evnt?.data ?? {};
     // console.log(id, name, slug, logo_url, image_url, created_by);
-      const eR = Object.create(evnt?.data ?? {});
-      console.log(...eR);
-
+      // const eR = Object.create(evnt?.data ?? {});
       
-
     try {
       // @ts-ignore
       await createCommunity(
         // @ts-ignore
+        // {
+        //   id: eR.id.toString(),
+        //   name: eR.name.toString(),
+        //   username: eR.slug.toString(),
+        //   image: eR.logo_url.toString() || eR.image_url.toString(),
+        //   bio: "org bio",
+        //   createdById: eR.created_by.toString(),
+        // }
         {
-          id: eR.id.toString(),
-          name: eR.name.toString(),
-          username: eR.slug.toString(),
-          image: eR.logo_url.toString() || eR.image_url.toString(),
-          bio: "org bio",
-          createdById: eR.created_by.toString(),
+          id:id.toString(),
+          name:name.toString(),
+          username:slug.toString(),
+          image:image_url.toString() || logo_url.toString(),
+          bio:"Org bio",
+          createdById:created_by.toString()
+
         }
       );
 
@@ -180,7 +186,7 @@ export const POST = async (request: Request) => {
       console.log("updated", evnt?.data);
 
       // @ts-ignore
-      await updateCommunityInfo(id, name, slug, logo_url);
+      await updateCommunityInfo(id.toString(), name.toString(), slug.toString(), logo_url.toString());
 
       return NextResponse.json({ message: "Member removed" }, { status: 201 });
     } catch (err) {
