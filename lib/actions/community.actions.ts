@@ -7,18 +7,26 @@ import Thread from "../models/thread.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
-
-export async function createCommunity(
+interface Params{
   id: string,
   name: string,
   username: string,
   image: string,
   bio: string,
-  createdById: string // Change the parameter name to reflect it's an id
+  createdById: string
+}
+
+export async function createCommunity(
+  {id,
+  name,
+  username,
+  image,
+  bio,
+  createdById}: Params
+   // Change the parameter name to reflect it's an id
 ) {
   try {
     connectToDB();
-
     // Find the user with the provided unique id
     const user = await User.findOne({ id: createdById });
 
@@ -53,7 +61,7 @@ export async function fetchCommunityDetails(id: string) {
   try {
     connectToDB();
 
-    const communityDetails = await Community.findOne({ id }).populate([
+    const communityDetails = await Community.findOne({id}).populate([
       "createdBy",
       {
         path: "members",
@@ -74,7 +82,7 @@ export async function fetchCommunityPosts(id: string) {
   try {
     connectToDB();
 
-    const communityPosts = await Community.findById(id).populate({
+    const communityPosts = await Community.findOne({id:id}).populate({
       path: "threads",
       model: Thread,
       populate: [
@@ -89,7 +97,7 @@ export async function fetchCommunityPosts(id: string) {
           populate: {
             path: "author",
             model: User,
-            select: "image _id", // Select the "name" and "_id" fields from the "User" model
+            select: "name image _id", // Select the "name" and "_id" fields from the "User" model
           },
         },
       ],

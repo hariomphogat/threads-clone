@@ -65,26 +65,38 @@ export const POST = async (request: Request) => {
   if (eventType === "organization.created") {
     // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/CreateOrganization
     // Show what evnt?.data sends from above resource
-    const { id, name, slug, logo_url, image_url, created_by } =
-      evnt?.data ?? {};
+    console.log(
+      "organisation created ref:route.ts/line68,data collected from clerk ",
+      evnt?.data
+    );
+    
+    // const { id, name, slug, logo_url, image_url, created_by } =
+    //   evnt?.data ?? {};
+    // console.log(id, name, slug, logo_url, image_url, created_by);
+      const eR = Object.create(evnt?.data ?? {});
+      console.log(...eR);
+
+      
 
     try {
       // @ts-ignore
       await createCommunity(
         // @ts-ignore
-        id,
-        name,
-        slug,
-        logo_url || image_url,
-        "org bio",
-        created_by
+        {
+          id: eR.id.toString(),
+          name: eR.name.toString(),
+          username: eR.slug.toString(),
+          image: eR.logo_url.toString() || eR.image_url.toString(),
+          bio: "org bio",
+          createdById: eR.created_by.toString(),
+        }
       );
 
       return NextResponse.json({ message: "User created" }, { status: 201 });
     } catch (err) {
       console.log(err);
       return NextResponse.json(
-        { message: "Internal Server Error" },
+        { message: "Internal Server Error line 88 clerk/route" },
         { status: 500 }
       );
     }

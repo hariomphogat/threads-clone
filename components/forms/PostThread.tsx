@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,11 +17,13 @@ import { usePathname, useRouter } from "next/navigation";
 // import { updateUser } from "@/lib/actions/user.actions";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
+import { useOrganization } from "@clerk/nextjs";
 
 function PostThread({ userId }: { userId: string }) {
 
   const router = useRouter();
   const pathname = usePathname();
+  const { organization } = useOrganization();
 
   const form = useForm<z.infer<typeof ThreadValidation>>({
     resolver: zodResolver(ThreadValidation),
@@ -35,11 +36,12 @@ function PostThread({ userId }: { userId: string }) {
 
    
      async function onSubmit(values: z.infer<typeof ThreadValidation>) {
-    
+    // console.log("The organization id you are looking for is here:", organization?.id);
+      
       await createThread({
         text: values.thread,
         author: values.accountId,
-        communityId: null,
+        communityId: organization ? organization.id : null,
         path: pathname,
       });
       router.push("/");
